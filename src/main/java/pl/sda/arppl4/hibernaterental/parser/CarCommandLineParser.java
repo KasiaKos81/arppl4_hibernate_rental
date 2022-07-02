@@ -8,6 +8,7 @@ import pl.sda.arppl4.hibernaterental.model.Transmission;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -33,19 +34,98 @@ public class CarCommandLineParser {
             switch (command) {
                 case "add":
                     handleAddCommand();
+                    break;
+                case "getAll":
+                    handlegetAllCommand();
+                    break;
                 case "remove":
                     handleRemoveCommand();
+                    break;
+                case "update":
+                    handleUpdateCommand();
+                    break;
 
             }
-
-
         }
 
         while (!command.equals("quit"));
     }
 
-    private void handleRemoveCommand() {
+    private void handleUpdateCommand() {
+        System.out.println("Provide the id of the car you want to update");
+        Long id = scanner.nextLong();
 
+        Optional<Car> carOptional = dao.getOneCar(id);
+        if (carOptional.isPresent()) {
+            Car car = carOptional.get();
+
+            System.out.println("tell what you want to change: name, brand, date, bodyType, transmission, seats, capacity");
+            String change = scanner.next();
+
+            switch (change){
+                case "name":
+                    System.out.println("provide name");
+                    String name = scanner.next();
+                    car.setName(name);
+                    break;
+                case "brand":
+                    System.out.println("provide brand");
+                    String brand = scanner.next();
+                    car.setBrand(brand);
+                    break;
+                case "date":
+                    LocalDate date = loadProductionDateFromUser();
+                   car.setDate(date);
+                    break;
+                case "bodyType":
+                    BodyType bodyType = loadBodyTypeFromUser();
+                    car.setBodyType(bodyType);
+                    break;
+                case "transmission":
+                    Transmission transmission = loadTransmissionTypeFromUser();
+                    car.setTransmission(transmission);
+                    break;
+                case "seats":
+                    System.out.println("Provide number of seats");
+                    Double seats = scanner.nextDouble();
+                    car.setSeats(seats);
+                    break;
+                case "capacity":
+                    System.out.println("set capacity");
+                    Double capacity = scanner.nextDouble();
+                    car.getCapacity();
+                    break;
+                default:
+                    System.out.println("Field with this name is not handled");
+            }
+            dao.updateCar(car);
+            System.out.println("Car has been updated");
+        } else {
+            System.out.println("404 not found");
+        }
+    }
+
+    private void handleRemoveCommand() {
+        System.out.println("Provide the id of the car you want to remove");
+        Long id = scanner.nextLong();
+
+        Optional<Car> carOptional = dao.getOneCar(id);
+        if(carOptional.isPresent()){
+            Car car = carOptional.get();
+            dao.removeCar(car);
+            System.out.println("Car removed");
+        } else {
+            System.out.println("404 not found");
+        }
+    }
+
+    private void handlegetAllCommand() {
+        List<Car> carList = dao.getAllCars();
+        for (Car car : carList) {
+            System.out.println(car);
+
+        }
+        System.out.println();
     }
 
 
@@ -101,12 +181,12 @@ public class CarCommandLineParser {
         BodyType bodyType = null;
         do {
             try {
-                System.out.println("Provide body type CABRIO, SUV or SEDANL:");
+                System.out.println("Provide body type CABRIO, SUV or SEDAN:");
                 String typeString = scanner.next();
 
                 bodyType = BodyType.valueOf(typeString.toUpperCase());
             } catch (IllegalArgumentException iae) {
-                System.err.println("wrong type, please provide CABRIO, SUV, SEDANL");
+                System.err.println("wrong type, please provide CABRIO, SUV, SEDAN");
             }
         } while (bodyType == null);
         return bodyType;
