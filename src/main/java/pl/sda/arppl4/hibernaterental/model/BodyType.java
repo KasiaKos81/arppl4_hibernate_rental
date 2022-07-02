@@ -5,6 +5,6 @@ public enum BodyType {
     SEDAN,
     CABRIO,
     SUV,
-
+    HATCHBACK,
 
 }

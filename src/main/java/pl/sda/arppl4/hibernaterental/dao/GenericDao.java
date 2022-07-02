@@ -5,26 +5,22 @@ import org.hibernate.Session;
 import org.hibernate.SessionException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import pl.sda.arppl4.hibernaterental.model.Car;
 import pl.sda.arppl4.hibernaterental.util.HibernateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CarDao implements ICarDao{
+public class GenericDao <T> {
 
-
-    @Override
-    public void addCar(Car car) {
+    public void addCar(T addedObject) {
         SessionFactory fabrykaPolaczen = HibernateUtil.getSessionFactory();
 
         Transaction transaction = null;
-
         try (Session session = fabrykaPolaczen.openSession()) {
             transaction = session.beginTransaction();
 
-            session.merge(car);
+            session.merge(addedObject);
 
             transaction.commit();
         } catch (SessionException sessionException) {
@@ -32,67 +28,59 @@ public class CarDao implements ICarDao{
                 transaction.rollback();
             }
         }
-
     }
 
-    @Override
-    public void removeCar(Car car) {
+    public void removeCar(T removedObject) {
         SessionFactory fabrykaPolaczen = HibernateUtil.getSessionFactory();
-        try (Session session = fabrykaPolaczen.openSession()){
+        try (Session session = fabrykaPolaczen.openSession()) {
             Transaction transaction = session.beginTransaction();
 
-            session.remove(car);
+            session.remove(removedObject);
 
             transaction.commit();
         }
-
     }
 
-    @Override
-    public Optional<Car> getOneCar(Long id) {
+    public Optional<T> getOneCar(Long id, Class<T> classType) {
         SessionFactory fabrykaPolaczen = HibernateUtil.getSessionFactory();
         try (Session session = fabrykaPolaczen.openSession()) {
-            Car objectCar = session.get(Car.class, id);
+            T foundObject = session.get(classType, id);
 
-            return Optional.ofNullable(objectCar);
+            return Optional.ofNullable(foundObject);
         }
     }
 
-    @Override
-    public List<Car> getAllCars() {
-        List<Car> carList = new ArrayList<>();
+    public List<T> getAllCars(Class<T> classType) {
+        List<T> list = new ArrayList<>();
 
         SessionFactory fabrykaPolaczen = HibernateUtil.getSessionFactory();
         try (Session session = fabrykaPolaczen.openSession()) {
+            TypedQuery<T> request = session.createQuery("from " + classType.getName(), classType);
+            List<T> requestResult = request.getResultList();
 
-            TypedQuery<Car> request = session.createQuery("from Car", Car.class);
-            List<Car> requestResult = request.getResultList();
-
-            carList.addAll(requestResult);
+            list.addAll(requestResult);
         } catch (SessionException sessionException) {
-            System.err.println("Error, wrong request");
-
+            System.err.println("Error.");
         }
-        return carList;
+
+        return list;
     }
 
-    @Override
-    public void updateCar(Car car) {
+    public void updateCar(T updatedObject) {
         SessionFactory fabrykaPolaczen = HibernateUtil.getSessionFactory();
 
         Transaction transaction = null;
         try (Session session = fabrykaPolaczen.openSession()) {
             transaction = session.beginTransaction();
 
-            session.merge(car);
+            session.merge(updatedObject);
 
             transaction.commit();
-
         } catch (SessionException sessionException) {
             if (transaction != null){
                 transaction.rollback();
             }
         }
-
     }
+
 }

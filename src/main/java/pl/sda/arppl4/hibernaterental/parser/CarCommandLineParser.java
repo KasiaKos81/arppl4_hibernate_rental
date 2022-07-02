@@ -1,6 +1,6 @@
 package pl.sda.arppl4.hibernaterental.parser;
 
-import pl.sda.arppl4.hibernaterental.dao.CarDao;
+import pl.sda.arppl4.hibernaterental.dao.GenericDao;
 import pl.sda.arppl4.hibernaterental.model.BodyType;
 import pl.sda.arppl4.hibernaterental.model.Car;
 import pl.sda.arppl4.hibernaterental.model.Transmission;
@@ -17,9 +17,9 @@ public class CarCommandLineParser {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private Scanner scanner;
-    private CarDao dao;
+    private GenericDao <Car> dao;
 
-    public CarCommandLineParser(Scanner scanner, CarDao dao) {
+    public CarCommandLineParser(Scanner scanner, GenericDao dao) {
         this.scanner = scanner;
         this.dao = dao;
     }
@@ -54,7 +54,7 @@ public class CarCommandLineParser {
         System.out.println("Provide the id of the car you want to update");
         Long id = scanner.nextLong();
 
-        Optional<Car> carOptional = dao.getOneCar(id);
+        Optional<Car> carOptional = dao.getOneCar(id, Car.class);
         if (carOptional.isPresent()) {
             Car car = carOptional.get();
 
@@ -108,7 +108,7 @@ public class CarCommandLineParser {
         System.out.println("Provide the id of the car you want to remove");
         Long id = scanner.nextLong();
 
-        Optional<Car> carOptional = dao.getOneCar(id);
+        Optional<Car> carOptional = dao.getOneCar(id, Car.class);
         if(carOptional.isPresent()){
             Car car = carOptional.get();
             dao.removeCar(car);
@@ -119,7 +119,7 @@ public class CarCommandLineParser {
     }
 
     private void handlegetAllCommand() {
-        List<Car> carList = dao.getAllCars();
+        List<Car> carList = dao.getAllCars(Car.class);
         for (Car car : carList) {
             System.out.println(car);
 
@@ -183,12 +183,12 @@ public class CarCommandLineParser {
         BodyType bodyType = null;
         do {
             try {
-                System.out.println("Provide body type CABRIO, SUV or SEDAN:");
+                System.out.println("Provide body type CABRIO, HATCHBACK, SUV or SEDAN:");
                 String typeString = scanner.next();
 
                 bodyType = BodyType.valueOf(typeString.toUpperCase());
             } catch (IllegalArgumentException iae) {
-                System.err.println("wrong type, please provide CABRIO, SUV, SEDAN");
+                System.err.println("wrong type, please provide CABRIO, HATCHBACK, SUV, SEDAN");
             }
         } while (bodyType == null);
         return bodyType;
