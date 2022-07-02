@@ -16,6 +16,5 @@ To launch the project it is essential to configure the connection
 with database.
 You can find the connection file in 'scr/main/resources'.
 
-
 ### Author
-Me (2022) (R)
+Me... almost...(with priceless help of our Java trainer) (2022) (R)
