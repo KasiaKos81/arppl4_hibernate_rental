@@ -44,7 +44,6 @@ public class CarCommandLineParser {
                 case "update":
                     handleUpdateCommand();
                     break;
-
             }
         }
 
@@ -168,9 +167,12 @@ public class CarCommandLineParser {
                     throw new IllegalArgumentException("Date is after today");
                 }
 
-            } catch (IllegalArgumentException | DateTimeException iae) {
+            } catch (DateTimeException iae) {
                 productionDate = null; // żeby wyczyściło jak ktoś wpisał złą date
                 System.err.println("Wrong date formatt, should be yyyy-MM-dd");
+            } catch (IllegalArgumentException iae){
+                productionDate = null;
+                System.err.println("Date is after today");
             }
         } while (productionDate == null);
 
