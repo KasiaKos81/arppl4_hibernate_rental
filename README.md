@@ -14,16 +14,8 @@ To launch the project it is mandatory to have:
 ### How to launch
 To launch the project it is essential to configure the connection 
 with database.
-You can find the connection file template in 'scr/main/resources'.
-It is necessary to copy the file and update the following fields:
-```xml
-        <property name="connection.url"></property> <!--TODO: zmienić adres połączenia-->
-        <property name="connection.username"/> <!--TODO: wypełnić nazwę użytkownika-->
-        <property name="connection.password"/> <!--TODO: wypełnić hasło-->
-```
-After update, change the file name from:
+You can find the connection file in 'scr/main/resources'.
 
-`template_hibernate.cfg.xml` to `hibernate.cfg.xml`.
 
 ### Author
 Me (2022) (R)
