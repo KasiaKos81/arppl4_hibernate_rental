@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface ICarDao {
 
-    public void addsCar(Car car);
+    public void addCar(Car car);
     // Delete
     public void removeCar(Car car);
     // Read
-    public Optional<Car> listOneCar(Long id);
+    public Optional<Car> getOneCar(Long id);
     // Read
-    public List<Car> listeAllCars();
+    public List<Car> getAllCars();
     // Update
     public void updateCar(Car car);
 
