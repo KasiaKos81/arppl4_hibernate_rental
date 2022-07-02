@@ -60,7 +60,7 @@ public class CarDao implements ICarDao{
 
     @Override
     public List<Car> getAllCars() {
-        List<Car> productList = new ArrayList<>();
+        List<Car> carList = new ArrayList<>();
 
         SessionFactory fabrykaPolaczen = HibernateUtil.getSessionFactory();
         try (Session session = fabrykaPolaczen.openSession()) {
@@ -68,12 +68,12 @@ public class CarDao implements ICarDao{
             TypedQuery<Car> request = session.createQuery("from Car", Car.class);
             List<Car> requestResult = request.getResultList();
 
-            productList.addAll(requestResult);
+            carList.addAll(requestResult);
         } catch (SessionException sessionException) {
             System.err.println("Error, wrong request");
 
         }
-        return productList;
+        return carList;
     }
 
     @Override
