@@ -84,7 +84,7 @@ public class CarCommandLineParser {
 
         private boolean checkIfTheCarIsAvailable(Car car){
         Optional<CarRental> optionalCarRental = findActiveRental(car);
-        return optionalCarRental.isPresent();
+        return !optionalCarRental.isPresent();
         }
 
 
@@ -190,7 +190,7 @@ public class CarCommandLineParser {
         if(carOptional.isPresent()){
             Car car = carOptional.get();
 
-            if(!checkIfTheCarIsAvailable(car)) {
+            if(checkIfTheCarIsAvailable(car)) {
 
                 System.out.println("Give name");
                 String name = scanner.next();
