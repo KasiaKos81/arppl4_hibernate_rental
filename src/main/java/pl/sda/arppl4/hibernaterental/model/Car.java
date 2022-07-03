@@ -1,11 +1,10 @@
 package pl.sda.arppl4.hibernaterental.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -31,7 +30,18 @@ public class Car {
     private Transmission transmission;
     private Double capacity;
 
+    @OneToMany(mappedBy = "car", fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
 
+    private Set<CarRental> carRentals;
 
-
+    public Car(String name, String brand, LocalDate date, BodyType bodyType, Double seats, Transmission transmission, Double capacity) {
+        this.name = name;
+        this.brand = brand;
+        this.date = date;
+        this.bodyType = bodyType;
+        this.seats = seats;
+        this.transmission = transmission;
+        this.capacity = capacity;
+    }
 }
