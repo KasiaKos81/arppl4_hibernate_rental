@@ -208,7 +208,7 @@ public class CarCommandLineParser {
             }
 
         } else {
-            System.out.println("404 not found");
+            System.out.println("404 not found - no car with such id");
         }
     }
 
